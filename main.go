@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	readYaPage()
+	//readYaPage()
+	parsePage("yaPage.txt")
 }
 
 func readYaPage() {
