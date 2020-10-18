@@ -1,14 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func main() {
-	//readYaPage()
-	parsePage("yaPage.txt")
+	readYaPage()
+	wd := parsePage2("yaPage.txt")
+	fmt.Println(wd)
 }
 
 func readYaPage() {
