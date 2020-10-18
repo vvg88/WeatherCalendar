@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const yaURL = "https://yandex.ru/pogoda/?lat=56.979999&lon=40.983071"
+
 func main() {
 	readYaPage()
 	wd := parsePage("yaPage.txt")
@@ -15,15 +17,15 @@ func main() {
 }
 
 func readYaPage() {
-	page, err := readHTTPPage("https://yandex.ru/pogoda/?lat=56.979999&lon=40.983071")
+	page, err := readHTTPPage()
 	err = savePage("yaPage.txt", page)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func readHTTPPage(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+func readHTTPPage() ([]byte, error) {
+	resp, err := http.Get(yaURL)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
