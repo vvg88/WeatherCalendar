@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 // WeatherData contains weather condition data
@@ -13,6 +14,7 @@ type WeatherData struct {
 	WeatherCondition string
 	Humidity         uint8
 	AirPressure      uint16
+	TimeStamp        time.Time
 }
 
 func (wd *WeatherData) save() error {

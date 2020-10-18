@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const tmpExpr = `Текущая температура<\/span><span class="temp__value">([+-]\d+)<\/span>`
@@ -112,5 +113,6 @@ func parsePage(name string) *WeatherData {
 	wc, _ := getWeatherCondition(page)
 	h, _ := getHumidity(page)
 	ap, _ := getAirPressure(page)
-	return &WeatherData{Temperature: t, WindSpeed: ws, WeatherCondition: wc, Humidity: h, AirPressure: ap}
+	ts := time.Now()
+	return &WeatherData{Temperature: t, WindSpeed: ws, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
 }
