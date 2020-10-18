@@ -9,8 +9,9 @@ import (
 
 func main() {
 	readYaPage()
-	wd := parsePage2("yaPage.txt")
+	wd := parsePage("yaPage.txt")
 	fmt.Println(wd)
+	wd.save()
 }
 
 func readYaPage() {

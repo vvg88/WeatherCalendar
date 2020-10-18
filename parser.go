@@ -102,7 +102,7 @@ func getAirPressure(page []byte) (uint16, error) {
 	return uint16(ap), nil
 }
 
-func parsePage2(name string) *weatherData {
+func parsePage(name string) *WeatherData {
 	page, err := ioutil.ReadFile(name)
 	if err != nil {
 		log.Fatal(err)
@@ -112,5 +112,5 @@ func parsePage2(name string) *weatherData {
 	wc, _ := getWeatherCondition(page)
 	h, _ := getHumidity(page)
 	ap, _ := getAirPressure(page)
-	return &weatherData{temperature: t, windSpeed: ws, weatherCondition: wc, humidity: h, airPressure: ap}
+	return &WeatherData{Temperature: t, WindSpeed: ws, WeatherCondition: wc, Humidity: h, AirPressure: ap}
 }
