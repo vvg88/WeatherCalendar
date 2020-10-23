@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestYaPageAvailable(t *testing.T) {
 	_, err := readHTTPPage()
