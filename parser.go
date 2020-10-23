@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"log"
 	"regexp"
@@ -10,23 +11,33 @@ import (
 	"time"
 )
 
-const tmpExpr = `Текущая температура<\/span><span class="temp__value">([+-]\d+)<\/span>`
-const windSpeedExpr = `wind-speed">(\d{1,2}(,\d)?)<\/span>`
-const wethCondExpr = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
-const humExpr = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2})`
-const pressExpr = `icon_pressure-white term__fact-icon" aria-hidden="true"><\/i>(?P<press>\d{3})`
+const (
+	tmpExpr       = `Текущая температура<\/span><span class="temp__value">([+-]?\d{1,2})<\/span>`
+	windSpeedExpr = `wind-speed">(\d{1,2}(,\d)?)<\/span>`
+	wethCondExpr  = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
+	humExpr       = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2})`
+	pressExpr     = `icon_pressure-white term__fact-icon" aria-hidden="true"><\/i>(?P<press>\d{3})`
+)
 
-var tempRegx = regexp.MustCompile(tmpExpr)
-var windSpeedRegx = regexp.MustCompile(windSpeedExpr)
-var conditionRegx = regexp.MustCompile(wethCondExpr)
-var humidRegx = regexp.MustCompile(humExpr)
-var pressRegx = regexp.MustCompile(pressExpr)
+var (
+	tempRegx      = regexp.MustCompile(tmpExpr)
+	windSpeedRegx = regexp.MustCompile(windSpeedExpr)
+	conditionRegx = regexp.MustCompile(wethCondExpr)
+	humidRegx     = regexp.MustCompile(humExpr)
+	pressRegx     = regexp.MustCompile(pressExpr)
+
+	errTempNotFound      = errors.New("temperature was not found")
+	errWindSpeedNotFound = errors.New("wind speed was not found")
+	errWeathCondNotFound = errors.New("weather condition was not found")
+	errHumidityNotFound  = errors.New("humidity was not found")
+	errAirPressNotFound  = errors.New("air pressure was not found")
+)
 
 func getTemperature(page []byte) (int, error) {
 	submatches := tempRegx.FindSubmatch(page)
 	if submatches == nil {
 		log.Println("No temperature matches found!")
-		return 0, nil
+		return 0, errTempNotFound
 	}
 	tempStr := string(submatches[1])
 	t, err := strconv.Atoi(tempStr)
@@ -43,7 +54,7 @@ func getWindSpeed(page []byte) (float32, error) {
 	submatches := windSpeedRegx.FindSubmatch(page)
 	if submatches == nil {
 		log.Println("No wind speed matches found!")
-		return 0, nil
+		return 0, errWindSpeedNotFound
 	}
 	wsMatch := bytes.Replace(submatches[1], []byte{','}, []byte{'.'}, 1)
 	wsStr := string(wsMatch)
@@ -62,7 +73,7 @@ func getWeatherCondition(page []byte) (string, error) {
 	submatches := conditionRegx.FindSubmatch(page)
 	if submatches == nil {
 		log.Println("No weather condition matches found!")
-		return "", nil
+		return "", errWeathCondNotFound
 	}
 	wcStr := string(submatches[1])
 	log.Printf("A current weather condition is %s\n", wcStr)
@@ -73,7 +84,7 @@ func getHumidity(page []byte) (uint8, error) {
 	submatches := humidRegx.FindSubmatch(page)
 	if submatches == nil {
 		log.Println("No humidity matches found!")
-		return 0, nil
+		return 0, errHumidityNotFound
 	}
 	humStr := string(submatches[1])
 	hum, err := strconv.Atoi(humStr)
@@ -90,7 +101,7 @@ func getAirPressure(page []byte) (uint16, error) {
 	submatches := pressRegx.FindSubmatch(page)
 	if submatches == nil {
 		log.Println("No air pressure matches found!")
-		return 0, nil
+		return 0, errAirPressNotFound
 	}
 	apStr := string(submatches[1])
 	ap, err := strconv.Atoi(apStr)
