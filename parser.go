@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"io/ioutil"
 	"log"
@@ -56,9 +55,7 @@ func getWindSpeed(page []byte) (float32, error) {
 		log.Println("No wind speed matches found!")
 		return 0, errWindSpeedNotFound
 	}
-	wsMatch := bytes.Replace(submatches[1], []byte{','}, []byte{'.'}, 1)
-	wsStr := string(wsMatch)
-	wsStr = strings.ReplaceAll(wsStr, ",", ".")
+	wsStr := strings.ReplaceAll(string(submatches[1]), ",", ".")
 	ws, err := strconv.ParseFloat(wsStr, 32)
 	if err != nil {
 		log.Printf("Unable to parse wind speed value: %s\n", wsStr)
