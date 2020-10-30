@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var testCases = []struct {
+var wcTestCases = []struct {
 	name         string
 	weathCondStr string
 	want         string
@@ -55,7 +55,7 @@ var testCases = []struct {
 }
 
 func TestGetWeatherCondition(t *testing.T) {
-	for _, tc := range testCases {
+	for _, tc := range wcTestCases {
 		t.Run(tc.name, func(t *testing.T) {
 			wc, err := getWeatherCondition([]byte(tc.weathCondStr))
 			if wc != tc.want {
