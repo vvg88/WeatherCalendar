@@ -13,7 +13,7 @@ import (
 const (
 	tmpExpr       = `Текущая температура<\/span><span class="temp__value">([+-]?\d{1,2})<\/span>`
 	windSpeedExpr = `wind-speed">(\d{1,2}(,\d)?)<\/span>`
-	wethCondExpr  = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
+	weathCondExpr = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
 	humExpr       = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2})`
 	pressExpr     = `icon_pressure-white term__fact-icon" aria-hidden="true"><\/i>(?P<press>\d{3})`
 )
@@ -21,7 +21,7 @@ const (
 var (
 	tempRegx      = regexp.MustCompile(tmpExpr)
 	windSpeedRegx = regexp.MustCompile(windSpeedExpr)
-	conditionRegx = regexp.MustCompile(wethCondExpr)
+	conditionRegx = regexp.MustCompile(weathCondExpr)
 	humidRegx     = regexp.MustCompile(humExpr)
 	pressRegx     = regexp.MustCompile(pressExpr)
 
