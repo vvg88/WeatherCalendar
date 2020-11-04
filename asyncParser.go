@@ -1,8 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
-	"log"
 	"time"
 )
 
@@ -36,11 +34,7 @@ func getAirPressureAsync(page []byte, c chan uint16) {
 	c <- ap
 }
 
-func parsePageAsync(name string) *WeatherData {
-	page, err := ioutil.ReadFile(name)
-	if err != nil {
-		log.Fatal(err)
-	}
+func parsePageAsync(page []byte) *WeatherData {
 	tc := make(chan int)
 	wsc := make(chan float32)
 	wdc := make(chan string)

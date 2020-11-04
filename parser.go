@@ -139,3 +139,14 @@ func parsePage(name string) *WeatherData {
 	ts := time.Now()
 	return &WeatherData{Temperature: t, WindSpeed: ws, WindDirection: wd, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
 }
+
+func parsePageSync(page []byte) *WeatherData {
+	t, _ := getTemperature(page)
+	ws, _ := getWindSpeed(page)
+	wd, _ := getWindDirection(page)
+	wc, _ := getWeatherCondition(page)
+	h, _ := getHumidity(page)
+	ap, _ := getAirPressure(page)
+	ts := time.Now()
+	return &WeatherData{Temperature: t, WindSpeed: ws, WindDirection: wd, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
+}

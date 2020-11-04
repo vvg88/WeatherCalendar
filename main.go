@@ -11,7 +11,7 @@ const yaURL = "https://yandex.ru/pogoda/?lat=56.979999&lon=40.983071"
 
 func main() {
 	readYaPage()
-	wd := parsePageAsync("yaPage.txt")
+	wd := parsePage("yaPage.txt")
 	fmt.Println(wd)
 	wd.save()
 }
@@ -46,4 +46,13 @@ func savePage(file string, page []byte) error {
 		log.Fatal(err)
 	}
 	return err
+}
+
+func openPage(file string) ([]byte, error) {
+	page, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return page, nil
 }
