@@ -11,7 +11,7 @@ const yaURL = "https://yandex.ru/pogoda/?lat=56.979999&lon=40.983071"
 
 func main() {
 	readYaPage()
-	wd := parsePage("yaPage.txt")
+	wd := parsePageAsync("yaPage.txt")
 	fmt.Println(wd)
 	wd.save()
 }
