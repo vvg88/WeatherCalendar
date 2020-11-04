@@ -11,6 +11,7 @@ import (
 type WeatherData struct {
 	Temperature      int
 	WindSpeed        float32
+	WindDirection    string
 	WeatherCondition string
 	Humidity         uint8
 	AirPressure      uint16

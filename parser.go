@@ -16,6 +16,7 @@ const (
 	weathCondExpr = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
 	humExpr       = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2}|100)%`
 	pressExpr     = `icon_pressure-white term__fact-icon" aria-hidden="true"><\/i>(\d{3})`
+	windDirExpr   = `<abbr class=" icon-abbr" title="Ветер:\s+([а-я\-]+)"`
 )
 
 var (
@@ -24,12 +25,14 @@ var (
 	conditionRegx = regexp.MustCompile(weathCondExpr)
 	humidRegx     = regexp.MustCompile(humExpr)
 	pressRegx     = regexp.MustCompile(pressExpr)
+	windDirRegx   = regexp.MustCompile(windDirExpr)
 
 	errTempNotFound      = errors.New("temperature was not found")
 	errWindSpeedNotFound = errors.New("wind speed was not found")
 	errWeathCondNotFound = errors.New("weather condition was not found")
 	errHumidityNotFound  = errors.New("humidity was not found")
 	errAirPressNotFound  = errors.New("air pressure was not found")
+	errWindDirNotFound   = errors.New("wind direction was not found")
 )
 
 func getTemperature(page []byte) (int, error) {
@@ -111,6 +114,17 @@ func getAirPressure(page []byte) (uint16, error) {
 	return uint16(ap), nil
 }
 
+func getWindDirection(page []byte) (string, error) {
+	submatches := windDirRegx.FindSubmatch(page)
+	if submatches == nil {
+		log.Println("No wind direction matches found!")
+		return "", errWindDirNotFound
+	}
+	wdStr := string(submatches[1])
+	log.Printf("Wind direction: %s", wdStr)
+	return wdStr, nil
+}
+
 func parsePage(name string) *WeatherData {
 	page, err := ioutil.ReadFile(name)
 	if err != nil {
@@ -118,9 +132,10 @@ func parsePage(name string) *WeatherData {
 	}
 	t, _ := getTemperature(page)
 	ws, _ := getWindSpeed(page)
+	wd, _ := getWindDirection(page)
 	wc, _ := getWeatherCondition(page)
 	h, _ := getHumidity(page)
 	ap, _ := getAirPressure(page)
 	ts := time.Now()
-	return &WeatherData{Temperature: t, WindSpeed: ws, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
+	return &WeatherData{Temperature: t, WindSpeed: ws, WindDirection: wd, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
 }
