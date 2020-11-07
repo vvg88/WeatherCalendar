@@ -48,7 +48,7 @@ func getTemperature(page []byte) (int, error) {
 		log.Println(err)
 		return 0, err
 	}
-	log.Printf("A current temperature is %d\n", t)
+	log.Printf("Temperature: %d\n", t)
 	return t, nil
 }
 
@@ -65,7 +65,7 @@ func getWindSpeed(page []byte) (float32, error) {
 		log.Println(err)
 		return 0, err
 	}
-	log.Printf("A current wind speed is %f\n", ws)
+	log.Printf("Wind speed: %f\n", ws)
 	return float32(ws), nil
 }
 
@@ -76,7 +76,7 @@ func getWeatherCondition(page []byte) (string, error) {
 		return "", errWeathCondNotFound
 	}
 	wcStr := string(submatches[1])
-	log.Printf("A current weather condition is %s\n", wcStr)
+	log.Printf("Weather condition: %s\n", wcStr)
 	return wcStr, nil
 }
 
@@ -93,7 +93,7 @@ func getHumidity(page []byte) (uint8, error) {
 		log.Println(err)
 		return 0, err
 	}
-	log.Printf("A current humidity is %d\n", hum)
+	log.Printf("Humidity: %d\n", hum)
 	return uint8(hum), nil
 }
 
@@ -110,7 +110,7 @@ func getAirPressure(page []byte) (uint16, error) {
 		log.Println(err)
 		return 0, err
 	}
-	log.Printf("A current air pressure is %d\n", ap)
+	log.Printf("Air pressure: %d\n", ap)
 	return uint16(ap), nil
 }
 
@@ -125,28 +125,29 @@ func getWindDirection(page []byte) (string, error) {
 	return wdStr, nil
 }
 
-func parsePage(name string) *WeatherData {
+func parsePage(name string) (*WeatherData, error) {
 	page, err := ioutil.ReadFile(name)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	t, _ := getTemperature(page)
-	ws, _ := getWindSpeed(page)
-	wd, _ := getWindDirection(page)
-	wc, _ := getWeatherCondition(page)
-	h, _ := getHumidity(page)
-	ap, _ := getAirPressure(page)
-	ts := time.Now()
-	return &WeatherData{Temperature: t, WindSpeed: ws, WindDirection: wd, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
+	return parsePageSync(page)
 }
 
-func parsePageSync(page []byte) *WeatherData {
-	t, _ := getTemperature(page)
-	ws, _ := getWindSpeed(page)
-	wd, _ := getWindDirection(page)
-	wc, _ := getWeatherCondition(page)
-	h, _ := getHumidity(page)
-	ap, _ := getAirPressure(page)
-	ts := time.Now()
-	return &WeatherData{Temperature: t, WindSpeed: ws, WindDirection: wd, WeatherCondition: wc, Humidity: h, AirPressure: ap, TimeStamp: ts}
+func parsePageSync(page []byte) (*WeatherData, error) {
+	t, err := getTemperature(page)
+	ws, err := getWindSpeed(page)
+	wd, err := getWindDirection(page)
+	wc, err := getWeatherCondition(page)
+	h, err := getHumidity(page)
+	ap, err := getAirPressure(page)
+
+	return &WeatherData{
+		Temperature:      t,
+		WindSpeed:        ws,
+		WindDirection:    wd,
+		WeatherCondition: wc,
+		Humidity:         h,
+		AirPressure:      ap,
+		TimeStamp:        time.Now(),
+	}, err
 }

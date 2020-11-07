@@ -1,36 +1,55 @@
 package main
 
 import (
+	"log"
 	"time"
 )
 
 func getTemperatureAsync(page []byte, c chan int) {
-	temp, _ := getTemperature(page)
+	temp, err := getTemperature(page)
+	if err != nil {
+		log.Printf("Error on getting temperature value! \n%v", err)
+	}
 	c <- temp
 }
 
 func getWindSpeedAsync(page []byte, c chan float32) {
-	ws, _ := getWindSpeed(page)
+	ws, err := getWindSpeed(page)
+	if err != nil {
+		log.Printf("Error on getting wind speed value! \n%v", err)
+	}
 	c <- ws
 }
 
 func getWindDirectionAsync(page []byte, c chan string) {
-	wd, _ := getWindDirection(page)
+	wd, err := getWindDirection(page)
+	if err != nil {
+		log.Printf("Error on getting wind direction! \n%v", err)
+	}
 	c <- wd
 }
 
 func getWeatherConditionAsync(page []byte, c chan string) {
-	wc, _ := getWeatherCondition(page)
+	wc, err := getWeatherCondition(page)
+	if err != nil {
+		log.Printf("Error on getting weather conditions! \n%v", err)
+	}
 	c <- wc
 }
 
 func getHumidityAsync(page []byte, c chan uint8) {
-	h, _ := getHumidity(page)
+	h, err := getHumidity(page)
+	if err != nil {
+		log.Printf("Error on getting humidity value! \n%v", err)
+	}
 	c <- h
 }
 
 func getAirPressureAsync(page []byte, c chan uint16) {
-	ap, _ := getAirPressure(page)
+	ap, err := getAirPressure(page)
+	if err != nil {
+		log.Printf("Error on getting air pressure value! \n%v", err)
+	}
 	c <- ap
 }
 
