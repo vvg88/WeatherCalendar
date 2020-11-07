@@ -21,7 +21,7 @@ type WeatherData struct {
 func (wd *WeatherData) save() error {
 	b, err := json.Marshal(wd)
 	if err != nil {
-		log.Printf("Error gotten on marshaling weather data: %+v; error: %v\n", wd, err)
+		log.Printf("Error on marshaling weather data: %+v; error: %v\n", wd, err)
 		return err
 	}
 	err = ioutil.WriteFile("weathDat.json", b, 0600)
