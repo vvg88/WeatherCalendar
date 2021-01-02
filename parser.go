@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	tmpExpr       = `Текущая температура<\/span><span class="temp__value">([+-]?\d{1,2})<\/span>`
+	tmpExpr       = `Текущая температура<\/span><span class="temp__value">([+−]?\d{1,2})<\/span>`
 	windSpeedExpr = `wind-speed">(\d{1,2}(,\d)?)<\/span>`
 	weathCondExpr = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
 	humExpr       = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2}|100)%`
@@ -42,6 +42,7 @@ func getTemperature(page []byte) (int, error) {
 		return 0, errTempNotFound
 	}
 	tempStr := string(submatches[1])
+	tempStr = strings.ReplaceAll(tempStr, "−", "-") // replace minus used by Yandex
 	t, err := strconv.Atoi(tempStr)
 	if err != nil {
 		log.Printf("Unable to parse temperature value: %s\n", tempStr)

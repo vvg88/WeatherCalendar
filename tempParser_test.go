@@ -22,13 +22,13 @@ var getTempTestCases = []struct {
 	},
 	{
 		name:        "tempGood3",
-		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</span><span class="temp__value">-3</span>`,
+		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</span><span class="temp__value">−3</span>`,
 		wantVal:     -3,
 		wantErr:     nil,
 	},
 	{
 		name:        "tempGood4",
-		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</span><span class="temp__value">-25</span>`,
+		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</span><span class="temp__value">−25</span>`,
 		wantVal:     -25,
 		wantErr:     nil,
 	},
@@ -59,6 +59,12 @@ var getTempTestCases = []struct {
 	{
 		name:        "tempBad4",
 		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</spann><span class="temp__value">10</span>`,
+		wantVal:     0,
+		wantErr:     errTempNotFound,
+	},
+	{
+		name:        "tempBad5",
+		tempPageStr: `<span class="temp__pre-a11y a11y-hidden">Текущая температура</span><span class="temp__value">-5</span>`,
 		wantVal:     0,
 		wantErr:     errTempNotFound,
 	},
