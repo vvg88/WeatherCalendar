@@ -19,9 +19,8 @@ type WeatherData struct {
 }
 
 func (wd *WeatherData) save() error {
-	b, err := json.Marshal(wd)
+	b, err := wd.toJSON()
 	if err != nil {
-		log.Printf("Error on marshaling weather data: %+v; error: %v\n", wd, err)
 		return err
 	}
 	err = ioutil.WriteFile("weathDat.json", b, 0600)
@@ -30,4 +29,13 @@ func (wd *WeatherData) save() error {
 		return err
 	}
 	return nil
+}
+
+func (wd *WeatherData) toJSON() (data []byte, err error) {
+	data, err = json.Marshal(wd)
+	if err != nil {
+		log.Printf("Error on marshaling weather data: %+v; error: %v\n", wd, err)
+		return nil, err
+	}
+	return data, nil
 }
