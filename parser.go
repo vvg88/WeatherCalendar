@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	tmpExpr       = `Текущая температура<\/span><span class="temp__value">([+−]?\d{1,2})<\/span>`
+	tmpExpr       = `Текущая температура<\/span><span class="temp__value temp__value_with-unit">([+−]?\d{1,2})<\/span>`
 	windSpeedExpr = `wind-speed">(\d{1,2}(,\d)?)<\/span>`
 	weathCondExpr = `link__condition day-anchor i-bem" data-bem='{"day-anchor":{"anchor":\d+}}'>([а-яА-Я\s]+)`
 	humExpr       = `icon_humidity-white term__fact-icon" aria-hidden="true"><\/i>(\d{1,2}|100)%`
