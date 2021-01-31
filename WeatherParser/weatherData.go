@@ -9,13 +9,13 @@ import (
 
 // WeatherData contains weather condition data
 type WeatherData struct {
-	Temperature      int
-	WindSpeed        float32
-	WindDirection    string
-	WeatherCondition string
-	Humidity         uint8
-	AirPressure      uint16
-	TimeStamp        time.Time
+	Temperature      int       `json:"temp"`
+	WindSpeed        float32   `json:"windSpd"`
+	WindDirection    string    `json:"windDir"`
+	WeatherCondition string    `json:"weatherCond"`
+	Humidity         uint8     `json:"humidity"`
+	AirPressure      uint16    `json:"airPress"`
+	TimeStamp        time.Time `json:"timeStamp"`
 }
 
 func (wd *WeatherData) save() error {
