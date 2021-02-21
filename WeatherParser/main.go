@@ -26,4 +26,9 @@ func yaWeatherDataHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	fmt.Fprint(w, string(wdAsJSON))
+
+	err = wd.saveToFireStore()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

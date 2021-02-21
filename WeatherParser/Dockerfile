@@ -8,4 +8,4 @@ RUN go install -v ./...
 EXPOSE 8080
 ENV TZ Europe/Moscow
 
-CMD ["WeatherCalendar"]
+CMD ["WeatherParser"]
