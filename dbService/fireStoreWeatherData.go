@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -17,6 +18,12 @@ type fsWeatherData struct {
 }
 
 func (fswd *fsWeatherData) save() error {
-	_, _, err := fsClient.Collection(weatherDataCollectionName).Add(ctx, fswd)
+	key := fswd.key()
+	_, err := fsClient.Collection(weatherDataCollectionName).Doc(key).Set(ctx, fswd)
 	return err
+}
+
+func (fswd *fsWeatherData) key() string {
+	ts := fswd.TimeStamp
+	return fmt.Sprintf("%d.%d.%d-%d", ts.Day(), ts.Month(), ts.Year(), ts.Hour())
 }
