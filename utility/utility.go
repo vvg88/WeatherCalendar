@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -44,12 +44,17 @@ func main() {
 		}
 
 		// Continue if the doc ID is new
-		docID := docSnap.Ref.ID
-		if strings.Contains(docID, ".") {
+		/*if strings.Contains(docID, ".") {
 			continue
 		}
+		fmt.Printf("Time stamp: %v\n", wd.TimeStamp)
+		fmt.Printf("Time stamp biased: %v\n", wd.TimeStamp)
 
-		// Save the doc with new ID
+		break*/
+
+		// Save the doc with new ID and biased time stamp
+		loc, err := time.LoadLocation("Local")
+		wd.TimeStamp = wd.TimeStamp.In(loc)
 		err = wd.save()
 		if err != nil {
 			log.Println(err)
@@ -58,6 +63,7 @@ func main() {
 		fmt.Printf("Doc '%s' saved!\n", wd.key())
 
 		// Delete the doc with old ID
+		docID := docSnap.Ref.ID
 		_, err = fsClient.Collection(weatherDataCollectionName).Doc(docID).Delete(ctx)
 		if err != nil {
 			log.Println(err)
