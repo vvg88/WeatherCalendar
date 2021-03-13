@@ -27,3 +27,12 @@ func (fswd *fsWeatherData) key() string {
 	ts := fswd.TimeStamp
 	return fmt.Sprintf("%d.%d.%d-%d", ts.Day(), ts.Month(), ts.Year(), ts.Hour())
 }
+
+func (fswd *fsWeatherData) setLocalTZ() error {
+	loc, err := time.LoadLocation("Local")
+	if err != nil {
+		return err
+	}
+	fswd.TimeStamp = fswd.TimeStamp.In(loc)
+	return nil
+}

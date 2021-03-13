@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -17,13 +19,64 @@ var ctx context.Context
 
 func main() {
 	ctx = context.Background()
-	var err error
-	fsClient, err = firestore.NewClient(ctx, projectID)
+	err := initFsClient()
 	defer fsClient.Close()
 	if err != nil {
 		log.Fatalf("Unable to create firestore client!\nError: %v", err)
 	}
+	backUpData()
+}
 
+func initFsClient() error {
+	var err error
+	fsClient, err = firestore.NewClient(ctx, projectID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func backUpData() {
+	iter := fsClient.Collection(weatherDataCollectionName).Documents(ctx)
+	var wdSlice []fsWeatherData
+	for cnt := 0; ; cnt++ {
+		docSnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			fmt.Printf("Error on getting next doc snap! Error: %v\n", err)
+			break
+		}
+
+		// Get document snap
+		var wd fsWeatherData
+		err = docSnap.DataTo(&wd)
+		if err != nil {
+			fmt.Printf("Error on converting firestore record! Error: %v", err)
+			continue
+		}
+		err = wd.setLocalTZ()
+		if err != nil {
+			fmt.Printf("Unable to load local time zone! Error: %v", err)
+		}
+		wdSlice = append(wdSlice, wd)
+		fmt.Printf("%d:\t%+v\n", cnt, wd)
+	}
+	//fmt.Println(wdSlice)
+
+	data, err := json.Marshal(wdSlice)
+	if err != nil {
+		fmt.Printf("Error on marshaling weather data! error: %v\n", err)
+	}
+
+	err = ioutil.WriteFile("backupWeatherData.json", data, 0600)
+	if err != nil {
+		fmt.Printf("Error on writing serialized weather data: %v\n", err)
+	}
+}
+
+func renameKeys() {
 	iter := fsClient.Collection(weatherDataCollectionName).Documents(ctx)
 	var wd fsWeatherData
 	for {
