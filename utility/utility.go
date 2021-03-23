@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,17 +15,29 @@ import (
 
 const projectID = "weather-calend-fires"
 
+var mode = flag.String("mode", "", "the command the utility should run.")
+
 var fsClient *firestore.Client
 var ctx context.Context
 
 func main() {
+	flag.Parse()
+
 	ctx = context.Background()
 	err := initFsClient()
 	defer fsClient.Close()
 	if err != nil {
 		log.Fatalf("Unable to create firestore client!\nError: %v", err)
 	}
-	backUpData()
+
+	switch *mode {
+	case "backupData":
+		backUpData()
+		break
+	default:
+		fmt.Println("Specify the mode utility should run.")
+		break
+	}
 }
 
 func initFsClient() error {
