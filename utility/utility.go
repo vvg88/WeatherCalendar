@@ -34,6 +34,9 @@ func main() {
 	case "backupData":
 		backUpData()
 		break
+	case "restoreData":
+		restoreData()
+		break
 	default:
 		fmt.Println("Specify the mode utility should run.")
 		break
@@ -139,4 +142,71 @@ func renameKeys() {
 	}
 
 	fmt.Println("Done!")
+}
+
+func restoreData() {
+	loc, err := time.LoadLocation("Local")
+	timeStamp := time.Date(2021, time.April, 8, 1, 0, 0, 0, loc)
+	fsWd := fsWeatherData{
+		TimeStamp:        timeStamp,
+		Temperature:      3,
+		AirPressure:      739,
+		Humidity:         92,
+		WeatherCondition: "Пасмурно",
+		WindDirection:    "восточный",
+		WindSpeed:        4,
+	}
+	err = fsWd.save()
+	if err != nil {
+		fmt.Printf("Error on saving lost values: %+v", err)
+	}
+	fmt.Println("Lost data successfully saved!")
+
+	timeStamp = time.Date(2021, time.April, 8, 7, 0, 0, 0, loc)
+	fsWd = fsWeatherData{
+		TimeStamp:        timeStamp,
+		Temperature:      4,
+		AirPressure:      734,
+		Humidity:         96,
+		WeatherCondition: "Дождь",
+		WindDirection:    "южный",
+		WindSpeed:        4,
+	}
+	err = fsWd.save()
+	if err != nil {
+		fmt.Printf("Error on saving lost values: %+v", err)
+	}
+	fmt.Println("Lost data successfully saved!")
+
+	timeStamp = time.Date(2021, time.April, 8, 13, 0, 0, 0, loc)
+	fsWd = fsWeatherData{
+		TimeStamp:        timeStamp,
+		Temperature:      5,
+		AirPressure:      734,
+		Humidity:         92,
+		WeatherCondition: "Дождь",
+		WindDirection:    "южный",
+		WindSpeed:        6,
+	}
+	err = fsWd.save()
+	if err != nil {
+		fmt.Printf("Error on saving lost values: %+v", err)
+	}
+	fmt.Println("Lost data successfully saved!")
+
+	timeStamp = time.Date(2021, time.April, 8, 19, 0, 0, 0, loc)
+	fsWd = fsWeatherData{
+		TimeStamp:        timeStamp,
+		Temperature:      1,
+		AirPressure:      740,
+		Humidity:         92,
+		WeatherCondition: "Слабый снег",
+		WindDirection:    "юго-западный",
+		WindSpeed:        6,
+	}
+	err = fsWd.save()
+	if err != nil {
+		fmt.Printf("Error on saving lost values: %+v", err)
+	}
+	fmt.Println("Lost data successfully saved!")
 }
