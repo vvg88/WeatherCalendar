@@ -33,13 +33,10 @@ func main() {
 	switch *mode {
 	case "backupData":
 		backUpData()
-		break
 	case "restoreData":
 		restoreData()
-		break
 	default:
 		fmt.Println("Specify the mode utility should run.")
-		break
 	}
 }
 
