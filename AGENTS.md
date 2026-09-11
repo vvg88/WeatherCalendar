@@ -12,12 +12,10 @@ Run one with e.g. `go run ./WeatherParser`. Each dir also has its own `Dockerfil
 
 ## Build / verify
 
-- **`CGO_ENABLED=0` is required in this environment.** The Firestore SDK pulls in cgo and the C headers are missing, so plain `go build ./...` / `go vet ./...` / `go test ./...` fail with `pthread.h: No such file` until you disable cgo.
-  - `CGO_ENABLED=0 go build ./...`
-  - `CGO_ENABLED=0 go vet ./...`
-  - `CGO_ENABLED=0 go test ./WeatherParser/`
+- Plain `go build ./...`, `go vet ./...`, `go test ./WeatherParser/` work with cgo enabled (`CGO_ENABLED=1`, the default) **as long as the libc dev headers are installed** (`libc6-dev`; the Firestore SDK pulls in cgo).
+  - Single test: `go test ./WeatherParser/ -run TestGetTemperature -v`.
+  - **Fallback for header-less environments:** if a build fails with `pthread.h: No such file` / `errno.h` / `stdlib.h`, either install `libc6-dev` (`sudo apt-get install -y libc6-dev`) or prefix commands with `CGO_ENABLED=0` to force a pure-Go build (e.g. `CGO_ENABLED=0 go build ./...`).
 - `go.mod` says `go 1.16`; code uses deprecated `io/ioutil` throughout — match the existing style, don't "modernize" imports opportunistically.
-- Single test: `CGO_ENABLED=0 go test ./WeatherParser/ -run TestGetTemperature -v`.
 
 ## Testing quirks
 
